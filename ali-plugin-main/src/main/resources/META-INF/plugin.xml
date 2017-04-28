@@ -2,7 +2,7 @@
     <id>com.hp.alm.ali</id>
     <name>HP ALI</name>
     <description>Application Lifecycle Intelligence for HP ALM</description>
-    <version>3.17.@{idea.build}</version>
+    <version>3.18.@{idea.sdk.build}</version>
     <vendor logo="/ali_icon.png" url="https://hpln.hp.com/group/application-lifecycle-intelligence">HP</vendor>
 
     <idea-version since-build="@{idea.build.min}"/>

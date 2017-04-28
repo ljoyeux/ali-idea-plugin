@@ -37,47 +37,47 @@
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>openapi</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>idea</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij.plugins.tasks</groupId>
             <artifactId>tasks-api</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>annotations</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>util</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>extensions</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij.plugins.git4idea</groupId>
             <artifactId>git4idea</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij.plugins.svn4idea</groupId>
             <artifactId>svn4idea</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>jdom</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>gson-2.3</artifactId>
-            <version>${idea.version}</version>
+            <version>${idea.sdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.hp.alm.ali</groupId>
@@ -155,7 +155,7 @@
                                 <replace file="${project.build.outputDirectory}/META-INF/plugin.xml"
                                          token="@{idea.build.min}" value="${idea.build.min}"/>
                                 <replace file="${project.build.outputDirectory}/META-INF/plugin.xml"
-                                         token="@{idea.build}" value="${idea.build}"/>
+                                         token="@{idea.sdk.build}" value="${idea.sd.build}"/>
                             </tasks>
                         </configuration>
                     </execution>

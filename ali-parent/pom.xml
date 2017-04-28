@@ -13,9 +13,9 @@
 
     <properties>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <idea.build>141.3058.30</idea.build>
-        <idea.version>IC-${idea.build}</idea.version>
         <idea.build.min>141.3058.30</idea.build.min>
+        <idea.sdk.build>141.3058.30</idea.sdk.build>
+        <idea.sdk.version>IC-${idea.sdk.build}</idea.sdk.version>
     </properties>
 
     <build>

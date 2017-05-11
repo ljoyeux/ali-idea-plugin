@@ -41,6 +41,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EntityDetail extends JPanel implements ContentManagerListener, HasEntity, EntityListener, ServerTypeListener, DataProvider {
     private RestService restService;
@@ -51,6 +53,7 @@ public class EntityDetail extends JPanel implements ContentManagerListener, HasE
     private Project project;
     private JPanel workspaceAndOuterPanel;
     private AliProjectConfiguration conf;
+    private JSplitPane splitPane;
 
     public EntityDetail(Project project, Entity entity) {
         super(new BorderLayout());
@@ -84,7 +87,9 @@ public class EntityDetail extends JPanel implements ContentManagerListener, HasE
         ScrollablePanel contentNoExpansion = new ScrollablePanel(new BorderLayout());
         contentNoExpansion.add(workspaceAndOuterPanel, BorderLayout.NORTH);
         contentNoExpansion.setBackground(new JTextPane().getBackground());
-        add(new JBScrollPane(contentNoExpansion), BorderLayout.CENTER);
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        splitPane.setTopComponent(new JBScrollPane(contentNoExpansion));
+        add(splitPane, BorderLayout.CENTER);
 
         restService = project.getComponent(RestService.class);
         restService.addServerTypeListener(this);
@@ -227,22 +232,42 @@ public class EntityDetail extends JPanel implements ContentManagerListener, HasE
     private class ExtraPanel extends JPanel implements ExtraContent {
 
         private Component current;
+        private Map<Component, Integer> dividerLocations;
 
         public ExtraPanel() {
             super(new BorderLayout());
 
             setBorder(new EmptyBorder(5, 5, 0, 0));
+
+            dividerLocations = new HashMap<Component, Integer>();
         }
 
         @Override
         public boolean toggleComponent(Component comp) {
-            removeAll();
+            if(current!=null) {
+                dividerLocations.put(current, splitPane.getDividerLocation());
+            }
+
             if(current != comp) {
-                add(new NonRootScrollPane(comp, JBScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JBScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
                 current = comp;
+                splitPane.setBottomComponent(current);
             } else {
                 current = null;
             }
+
+            Integer location;
+            if(current==null) {
+                location = splitPane.getHeight();
+            } else {
+                location = dividerLocations.get(current);
+                if(location==null) {
+                    location = (int) (splitPane.getHeight()*.75);
+                }
+            }
+
+            splitPane.setDividerLocation(location);
+
+
             revalidate();
             return current == comp;
         }
@@ -250,7 +275,11 @@ public class EntityDetail extends JPanel implements ContentManagerListener, HasE
         @Override
         public void hideComponent(Component comp) {
             if(current == comp) {
-                removeAll();
+
+                int dividerLocation = splitPane.getDividerLocation();
+                dividerLocations.put(comp, dividerLocation);
+
+                splitPane.setDividerLocation(1);
                 current = null;
             }
         }

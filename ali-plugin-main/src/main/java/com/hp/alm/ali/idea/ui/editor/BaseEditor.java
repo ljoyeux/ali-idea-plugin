@@ -58,6 +58,8 @@ public abstract class BaseEditor extends MyDialog {
     protected Entity entity;
     protected SaveHandler saveHandler;
 
+    protected JBScrollPane outerScrollPane;
+
     public BaseEditor(Project project, String title, Entity entity, SaveHandler saveHandler) {
         super(project, title, false, true, Arrays.asList(Button.Save, Button.Cancel));
         this.project = project;
@@ -80,7 +82,10 @@ public abstract class BaseEditor extends MyDialog {
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.add(gridPanel, BorderLayout.CENTER);
         panel.add(gridFooter, BorderLayout.SOUTH);
-        getContentPane().add(new JBScrollPane(panel, JBScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+
+        outerScrollPane = new JBScrollPane(panel, JBScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        getContentPane().add(outerScrollPane);
+
 
         save = getButton(Button.Save);
         save.setEnabled(false);
@@ -112,6 +117,7 @@ public abstract class BaseEditor extends MyDialog {
                             gbc.anchor = GridBagConstraints.NORTH;
                             gbc.fill = GridBagConstraints.BOTH;
                             update();
+
 
                             save.addPropertyChangeListener("enabled", new PropertyChangeListener() {
                                 @Override
@@ -171,6 +177,10 @@ public abstract class BaseEditor extends MyDialog {
     protected void packAndPosition() {
         pack();
         centerOnOwner();
+
+        // scroll to bottom
+        JScrollBar verticalScrollBar = outerScrollPane.getVerticalScrollBar();
+        verticalScrollBar.setValue(verticalScrollBar.getMaximum());
     }
 
     private void updateSave() {

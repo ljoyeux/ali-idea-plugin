@@ -19,6 +19,7 @@ package com.hp.alm.ali.idea.ui.editor.field;
 import com.hp.alm.ali.idea.action.UndoAction;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.components.JBScrollPane;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -127,7 +128,8 @@ public class CommentField extends BaseField {
         sb.append(dateTimeFormat.format(new Date()));
         sb.append("</b></font><br>");
 
-        newComment = newComment.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>").replaceAll("\r", "").replaceAll("\t", "        ");
+        newComment = StringEscapeUtils.escapeHtml3(newComment);
+        newComment= newComment.replaceAll("\n", "<br>").replaceAll("\r", "").replaceAll("\t", "        ");
         sb.append(newComment);
 
         sb.append(html_end);

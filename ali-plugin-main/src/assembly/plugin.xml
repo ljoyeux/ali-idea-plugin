@@ -10,6 +10,7 @@
             <include>*:tablefilter-swing</include>
             <include>*:commons-io</include>
             <include>com.hp.alm.ali:*</include>
+            <include>*:commons-lang3</include>
         </includes>
       <outputDirectory>ali-idea-plugin/lib</outputDirectory>
     </dependencySet>

@@ -250,10 +250,11 @@ public class EntityDetail extends JPanel implements ContentManagerListener, HasE
 
             if(current != comp) {
                 current = comp;
-                splitPane.setBottomComponent(current);
             } else {
                 current = null;
             }
+
+            splitPane.setBottomComponent(current);
 
             Integer location;
             if(current==null) {

@@ -20,6 +20,7 @@ import com.hp.alm.ali.idea.services.WeakListeners;
 import org.jdom.Element;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EntityFields implements JDOMSerialization {
@@ -59,6 +60,7 @@ public class EntityFields implements JDOMSerialization {
         synchronized(this) {
             this.columns.clear();
             this.columns.addAll(columns);
+            reorderColumns();
         }
         fireColumnsChanged(null);
     }
@@ -66,6 +68,7 @@ public class EntityFields implements JDOMSerialization {
     public void addColumn(String column) {
         synchronized(this) {
             columns.add(column);
+            reorderColumns();
         }
         fireColumnsChanged(column);
     }
@@ -81,6 +84,7 @@ public class EntityFields implements JDOMSerialization {
             }
         }
         if (changed) {
+            reorderColumns();
             fireColumnsChanged(null);
         }
     }
@@ -128,5 +132,13 @@ public class EntityFields implements JDOMSerialization {
 
         void columnsChanged(String columnToFocus);
 
+    }
+
+    private void reorderColumns() {
+        final List<String> last = new ArrayList<String>(Arrays.asList("description", "dev-comments"));
+
+        last.retainAll(columns);
+        columns.removeAll(last);
+        columns.addAll(last);
     }
 }

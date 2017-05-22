@@ -302,9 +302,10 @@ public class AliCheckinHandler extends CheckinHandler implements ActionListener,
                 if(addComment.isSelected() && !comment.getText().isEmpty()) {
                     String userName = project.getComponent(AliProjectConfiguration.class).getUsername();
                     String fullName = project.getComponent(ProjectUserService.class).getUserFullName(userName);
+                    String fontName = project.getComponent(AliProjectConfiguration.class).getFont();
 
                     String commentProperty = entity.isInitialized("dev-comments")? "dev-comments": "comments";
-                    String mergedComment = CommentField.mergeComment(entity.getPropertyValue(commentProperty), comment.getText(), userName, fullName);
+                    String mergedComment = CommentField.mergeComment(entity.getPropertyValue(commentProperty), comment.getText(), userName, fullName, fontName);
                     entity.setProperty(commentProperty, mergedComment);
                     modified.add(commentProperty);
                 }

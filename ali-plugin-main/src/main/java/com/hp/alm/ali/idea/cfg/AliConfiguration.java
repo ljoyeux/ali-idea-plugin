@@ -45,6 +45,7 @@ public class AliConfiguration implements PersistentStateComponent<Element> {
     public static final String PROPERTY_STATUS_TRANSITION = "status-transition";
     public static final String PROPERTY_SPELL_CHECKER = "spell-checker";
     public static final String PROPERTY_DEV_MOTIVE_ANNOTATION = "dev-motive-annotation";
+    public static final String PROPERTY_FONT = "font";
 
     public String ALM_LOCATION = "";
     public String ALM_DOMAIN = "";
@@ -52,6 +53,7 @@ public class AliConfiguration implements PersistentStateComponent<Element> {
     public String ALM_USERNAME = "";
     public String ALM_PASSWORD = "";
     public boolean STORE_PASSWORD = true;
+    public String ALM_FONT = "";
 
     public boolean spellChecker = true;
     public boolean devMotiveAnnotation = true;
@@ -81,6 +83,7 @@ public class AliConfiguration implements PersistentStateComponent<Element> {
         addProperty(element, PROPERTY_STATUS_TRANSITION, STATUS_TRANSITION);
         addProperty(element, PROPERTY_SPELL_CHECKER, String.valueOf(spellChecker));
         addProperty(element, PROPERTY_DEV_MOTIVE_ANNOTATION, String.valueOf(devMotiveAnnotation));
+        addProperty(element, PROPERTY_FONT, ALM_FONT);
         return element;
     }
 
@@ -108,6 +111,7 @@ public class AliConfiguration implements PersistentStateComponent<Element> {
         STATUS_TRANSITION = getProperty(element, PROPERTY_STATUS_TRANSITION);
         spellChecker = Boolean.valueOf(getProperty(element, PROPERTY_SPELL_CHECKER, "true"));
         devMotiveAnnotation = Boolean.valueOf(getProperty(element, PROPERTY_DEV_MOTIVE_ANNOTATION, "true"));
+        ALM_FONT = getProperty(element, PROPERTY_FONT);
 
         Element stored = element.getChild("stored");
         if(stored != null) {
@@ -174,6 +178,8 @@ public class AliConfiguration implements PersistentStateComponent<Element> {
     public String getPassword() {
         return ALM_PASSWORD;
     }
+
+    public String getFont() { return ALM_FONT; }
 
     protected String getProperty(Element element, String name, String defaultValue) {
         Element child = element.getChild(name);

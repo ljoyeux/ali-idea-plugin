@@ -17,7 +17,12 @@
 package com.hp.alm.ali.idea.ui.editor.field;
 
 import com.hp.alm.ali.idea.action.UndoAction;
+import com.hp.alm.ali.idea.cfg.AliConfiguration;
+import com.hp.alm.ali.idea.cfg.AliProjectConfiguration;
+import com.hp.alm.ali.idea.services.ProjectUserService;
 import com.hp.alm.ali.idea.util.DateUtils;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.components.JBScrollPane;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -42,12 +47,14 @@ public class CommentField extends BaseField {
 
     private String userName;
     private String fullName;
+    private String fontName;
 
-    public CommentField(String label, String value, String userName, String fullName) {
+    public CommentField(Project project, String label, String value) {
         super(label, false, value);
 
-        this.userName = userName;
-        this.fullName = fullName;
+        this.userName = project.getComponent(AliProjectConfiguration.class).getUsername();
+        this.fullName = project.getComponent(ProjectUserService.class).getUserFullName(userName);
+        this.fontName = project.getComponent(AliProjectConfiguration.class).getFont();
 
         addedComment = new JTextPane();
         addedComment.getDocument().addDocumentListener(new MyDocumentListener(this));
@@ -72,7 +79,7 @@ public class CommentField extends BaseField {
     }
 
     public String getValue() {
-        return mergeComment(getOriginalValue(), addedComment.getText(), userName, fullName);
+        return mergeComment(getOriginalValue(), addedComment.getText(), userName, fullName, fontName);
     }
 
     public boolean isDisableDefaultAction() {
@@ -95,7 +102,7 @@ public class CommentField extends BaseField {
         return !addedComment.getText().isEmpty();
     }
 
-    public static String mergeComment(String existingComment, String newComment, String userName, String fullName) {
+    public static String mergeComment(String existingComment, String newComment, String userName, String fullName, String fontName) {
         if(newComment.isEmpty()) {
             return existingComment;
         }
@@ -111,11 +118,17 @@ public class CommentField extends BaseField {
             existingComment = matcher.replaceAll(Matcher.quoteReplacement(matcher.group(1)));
         }
 
+        StringBuilder font = new StringBuilder("<font");
+        if(fontName!=null && !fontName.trim().isEmpty()) {
+            font.append(" face=\"").append(fontName).append("\"");
+        }
+        font.append(" color=\"#000080\">");
+
         StringBuffer sb = new StringBuffer();
         // neither latest ALM nor AGM store the outer-most html tags, simply add to what we have found
         sb.append(existingComment);
-        sb.append("<br><font color=\"#000080\"><b>________________________________________</b></font><br>");
-        sb.append("<font color=\"#000080\"><b>");
+        sb.append("<br>").append(font).append("<b>________________________________________</b></font><br>");
+        sb.append(font).append("<b>");
 
         if (fullName != null) {
             sb.append(fullName);

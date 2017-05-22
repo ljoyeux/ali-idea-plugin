@@ -33,14 +33,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
@@ -63,6 +56,7 @@ public abstract class AliAbstractConfigurable implements SearchableConfigurable,
     protected ConfigurationField projectField;
     protected ConfigurationField usernameField;
     protected ConfigurationField passwdField;
+    protected ConfigurationField fontField;
     protected JCheckBox storePasswd;
 
     private JButton testButton = new JButton("Test", IconLoader.getIcon("/toolwindows/toolWindowRun.png"));
@@ -101,6 +95,8 @@ public abstract class AliAbstractConfigurable implements SearchableConfigurable,
 
     protected abstract ConfigurationField getProjectField();
 
+    protected abstract ConfigurationField getFontField();
+
     protected void addAdditionalSettings(JPanel panel, GridBagConstraints c) {
     }
 
@@ -137,13 +133,14 @@ public abstract class AliAbstractConfigurable implements SearchableConfigurable,
     }
 
     public boolean isModified(String location, String domain, String project, String username, String password,
-                              boolean storePassword) {
+                              boolean storePassword, String font) {
         return !locationField.getText().equals(location) ||
                 !domainField.getText().equals(domain) ||
                 !projectField.getText().equals(project) ||
                 !usernameField.getText().equals(username) ||
                 !passwdField.getText().equals(password) ||
-                (storePasswd.isSelected() && storePasswd.isEnabled()) != storePassword;
+                (storePasswd.isSelected() && storePasswd.isEnabled()) != storePassword ||
+                !fontField.getText().equals(font);
     }
 
     protected void enableDisableTest() {
@@ -324,6 +321,15 @@ public abstract class AliAbstractConfigurable implements SearchableConfigurable,
         c.weightx = 1.0;
         c.weighty = 1.0;
         jPanel.add(new JPanel(), c);
+
+        c.gridx = 1;
+        c.gridy++;
+        jPanel.add(new JLabel("Font:"), c);
+        SearchableOptionsRegistrar.getInstance().addOption("font", null, "Font:", getId(), getDisplayName());
+        c.gridx++;
+        fontField = getFontField();
+        jPanel.add((JComboBox)fontField, c);
+
 
         content.add(jPanel, BorderLayout.CENTER);
         Component southern = getSouthernComponent();

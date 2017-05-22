@@ -160,6 +160,14 @@ public class AliProjectConfiguration extends AliConfiguration {
         }
     }
 
+    public String getFont() {
+        if(ALM_FONT.isEmpty()) {
+            return ApplicationManager.getApplication().getComponent(AliConfiguration.class).ALM_FONT;
+        } else {
+            return ALM_FONT;
+        }
+    }
+
     public boolean addComment(String comment) {
         if(!comments.contains(comment)) {
             if(comments.size() >= COMMENTS_HISTORY_LIMIT) {

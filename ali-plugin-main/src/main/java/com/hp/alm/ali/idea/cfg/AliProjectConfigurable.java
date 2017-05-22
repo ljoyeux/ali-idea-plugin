@@ -63,6 +63,8 @@ public class AliProjectConfigurable extends AliAbstractConfigurable {
         return new MergedTextField(12, ideConfiguration.ALM_PROJECT);
     }
 
+    protected ConfigurationField getFontField() { return new FontField(ideConfiguration.ALM_FONT);}
+
     protected ConfigurationField getPasswordField() {
         return new MergedPasswordField(12, ideConfiguration.ALM_PASSWORD);
     }
@@ -75,7 +77,8 @@ public class AliProjectConfigurable extends AliAbstractConfigurable {
                 projectConfiguration.getProject(),
                 projectConfiguration.getUsername(),
                 projectConfiguration.getPassword(),
-                projectConfiguration.STORE_PASSWORD);
+                projectConfiguration.STORE_PASSWORD,
+                projectConfiguration.getFont());
     }
 
     public void apply() throws ConfigurationException {
@@ -86,6 +89,7 @@ public class AliProjectConfigurable extends AliAbstractConfigurable {
         projectConfiguration.ALM_USERNAME = usernameField.getValue().trim();
         projectConfiguration.ALM_PASSWORD = passwdField.getValue();
         projectConfiguration.STORE_PASSWORD = storePasswd.isEnabled() && storePasswd.isSelected();
+        projectConfiguration.ALM_FONT = fontField.getValue();
         projectConfiguration.fireChanged();
     }
 
@@ -97,6 +101,7 @@ public class AliProjectConfigurable extends AliAbstractConfigurable {
         usernameField.setValue(projectConfiguration.ALM_USERNAME);
         passwdField.setValue(projectConfiguration.ALM_PASSWORD);
         storePasswd.setSelected(projectConfiguration.STORE_PASSWORD);
+        fontField.setValue(projectConfiguration.ALM_FONT);
         enableDisableTest();
     }
 

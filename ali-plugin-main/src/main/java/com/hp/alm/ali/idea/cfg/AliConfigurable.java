@@ -131,7 +131,8 @@ public class AliConfigurable extends AliAbstractConfigurable implements Document
                 aliConfiguration.getProject(),
                 aliConfiguration.getUsername(),
                 aliConfiguration.getPassword(),
-                aliConfiguration.STORE_PASSWORD)) {
+                aliConfiguration.STORE_PASSWORD,
+                aliConfiguration.getFont())) {
             return true;
         }
         if (devMotiveAnnotation.isSelected() != aliConfiguration.devMotiveAnnotation) {
@@ -150,6 +151,7 @@ public class AliConfigurable extends AliAbstractConfigurable implements Document
         aliConfiguration.STORE_PASSWORD = storePasswd.isEnabled() && storePasswd.isSelected();
         aliConfiguration.spellChecker = spellChecker.isSelected();
         aliConfiguration.devMotiveAnnotation = devMotiveAnnotation.isSelected();
+        aliConfiguration.ALM_FONT = fontField.getValue();
         aliConfiguration.fireChanged();
     }
 
@@ -163,6 +165,7 @@ public class AliConfigurable extends AliAbstractConfigurable implements Document
         storePasswd.setSelected(aliConfiguration.STORE_PASSWORD);
         spellChecker.setSelected(aliConfiguration.spellChecker);
         devMotiveAnnotation.setSelected(aliConfiguration.devMotiveAnnotation);
+        fontField.setValue(aliConfiguration.ALM_FONT);
         enableDisableTest();
     }
 
@@ -189,6 +192,9 @@ public class AliConfigurable extends AliAbstractConfigurable implements Document
     protected ConfigurationField getProjectField() {
         return new MyTextField(12);
     }
+
+    @Override
+    protected ConfigurationField getFontField() {return new FontField("");}
 
     public static ServerType getServerType(String location, String domain, String project, String username, String password) throws AuthenticationFailed {
         RestClient restClient = RestService.createRestClient(location, domain, project, username, password, RestClient.SessionStrategy.NONE);

@@ -165,10 +165,7 @@ public class EntityEditor extends BaseEditor implements EntityFields.ColumnsChan
         String value = entity.getPropertyValue(field.getName());
         if(field.isBlob()) {
             if(field.getName().equals("dev-comments") || field.getName().equals("comments")) {
-                String userName = project.getComponent(AliProjectConfiguration.class).getUsername();
-                String fullName = project.getComponent(ProjectUserService.class).getUserFullName(userName);
-
-                addField(field.getName(), new CommentField(field.getLabel(), value, userName, fullName), true);
+                addField(field.getName(), new CommentField(project, field.getLabel(), value), true);
             } else {
                 addField(field.getName(), new HTMLAreaField(project, field.getLabel(), value, field.isRequired(), editable), true);
             }

@@ -17,11 +17,9 @@
 package com.hp.alm.ali.idea.ui.editor.field;
 
 import com.hp.alm.ali.idea.action.UndoAction;
-import com.hp.alm.ali.idea.cfg.AliConfiguration;
 import com.hp.alm.ali.idea.cfg.AliProjectConfiguration;
 import com.hp.alm.ali.idea.services.ProjectUserService;
 import com.hp.alm.ali.idea.util.DateUtils;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.components.JBScrollPane;
@@ -40,7 +38,8 @@ public class CommentField extends BaseField {
     public static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
     public static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private static final String HTML_END_RX = "^(.*)(</body>\\s*</html>\\s*)$";
+    private static final String HTML_RX = "^(<html>\\s*<body>\\s*.*)(</body>\\s*</html>\\s*)$";
+    public static final String COMMENT_SEPARATOR = "________________________________________";
 
     private JPanel commentPanel;
     private JTextPane addedComment;
@@ -62,7 +61,7 @@ public class CommentField extends BaseField {
         HTMLAreaField.installNavigationShortCuts(addedComment);
 
         commentPanel = new JPanel(new BorderLayout());
-        if(!value.isEmpty()) {
+        if (!value.isEmpty()) {
             Splitter splitter = new Splitter(true, 0.75f);
             splitter.setHonorComponentsMinimumSize(true);
             splitter.setShowDividerControls(true);
@@ -103,50 +102,72 @@ public class CommentField extends BaseField {
     }
 
     public static String mergeComment(String existingComment, String newComment, String userName, String fullName, String fontName) {
-        if(newComment.isEmpty()) {
+        if (newComment.isEmpty()) {
             return existingComment;
         }
 
-        if(existingComment == null) {
-            existingComment = "";
-        }
+        boolean firstComment = (existingComment == null) || existingComment.trim().isEmpty();
 
         String html_end = "";
-        Matcher matcher = Pattern.compile(HTML_END_RX, Pattern.MULTILINE | Pattern.DOTALL).matcher(existingComment);
-        if(matcher.matches()) {
+        Matcher matcher = Pattern.compile(HTML_RX, Pattern.MULTILINE | Pattern.DOTALL).matcher(existingComment);
+        boolean isHtmlComment = firstComment;
+        if (matcher.matches()) {
             html_end = matcher.group(2);
             existingComment = matcher.replaceAll(Matcher.quoteReplacement(matcher.group(1)));
+            isHtmlComment = true;
         }
 
-        StringBuilder font = new StringBuilder("<font");
-        if(fontName!=null && !fontName.trim().isEmpty()) {
-            font.append(" face=\"").append(fontName).append("\"");
+        StringBuilder font = null;
+        if(isHtmlComment) {
+            font = new StringBuilder("<font");
+            if (fontName != null && !fontName.trim().isEmpty()) {
+                font.append(" face=\"").append(fontName).append("\"");
+            }
+            font.append(" color=\"#000080\">");
         }
-        font.append(" color=\"#000080\">");
 
         StringBuffer sb = new StringBuffer();
         // neither latest ALM nor AGM store the outer-most html tags, simply add to what we have found
-        sb.append(existingComment);
-        sb.append("<br>").append(font).append("<b>________________________________________</b></font><br>");
-        sb.append(font).append("<b>");
+        if (firstComment) {
+            sb.append("<html><body>");
+            sb.append(font);
+        } else {
+            sb.append(existingComment);
+            if (isHtmlComment) {
+                sb.append("<br>").append(font).append("<b>").append(COMMENT_SEPARATOR).append("</b></font><br>");
+                sb.append(font).append("<b>");
+            } else {
+                sb.append("\n").append(COMMENT_SEPARATOR).append("\n");
+            }
+        }
 
         if (fullName != null) {
             sb.append(fullName);
-            sb.append(" &lt;");
+            sb.append(isHtmlComment ? " &lt;" : " <");
             sb.append(userName);
-            sb.append("&gt;");
+            sb.append(isHtmlComment ? "&gt;" : ">");
         } else {
             sb.append(userName);
         }
         sb.append(", ");
         sb.append(DateUtils.SHORT_LOCALE_DATE_FORMAT.format(new Date()));
-        sb.append(":</b></font><br>");
+        sb.append(":");
+        if (isHtmlComment) {
+            sb.append("</b></font><br>");
+        } else {
+            sb.append("\n");
+        }
 
-        newComment = StringEscapeUtils.escapeHtml3(newComment);
-        newComment= newComment.replaceAll("\n", "<br>").replaceAll("\r", "").replaceAll("\t", "        ");
+        if (isHtmlComment) {
+            newComment = StringEscapeUtils.escapeHtml3(newComment);
+            newComment = newComment.replaceAll("\n", "<br>").replaceAll("\r", "").replaceAll("\t", "        ");
+        }
+
         sb.append(newComment);
 
-        sb.append(html_end);
+        if (isHtmlComment) {
+            sb.append(firstComment ? "</body></html>" : html_end);
+        }
         return sb.toString();
     }
 }

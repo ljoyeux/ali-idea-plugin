@@ -160,7 +160,7 @@
                                 <replace file="${project.build.outputDirectory}/META-INF/plugin.xml"
                                          token="@{idea.build.min}" value="${idea.build.min}"/>
                                 <replace file="${project.build.outputDirectory}/META-INF/plugin.xml"
-                                         token="@{idea.sdk.build}" value="${idea.sd.build}"/>
+                                         token="@{idea.sdk.build}" value="${idea.sdk.build}"/>
                             </tasks>
                         </configuration>
                     </execution>

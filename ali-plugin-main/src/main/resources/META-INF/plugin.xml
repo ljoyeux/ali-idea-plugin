@@ -9,6 +9,15 @@
 
     <change-notes>
         <![CDATA[
+      <h3>Changes in 3.18</h3>
+      <ul>
+        <li>[bugfix] First comment is formatted in html</li>
+        <li>[bugfix] Accent encoding in comments</li>
+        <li>[enhancement] Add split panel in details panel between details and attachments/links</li>
+        <li>[enhancement] Add font in preferences for comments editing</li>
+        <li>[enhancement] local date formatting</li>
+      </ul>
+
       <h3>Changes in 3.17</h3>
       <ul>
         <li>[bugfix] fixed team filtering with multiple releases</li>
